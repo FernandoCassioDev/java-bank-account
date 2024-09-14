@@ -1,6 +1,6 @@
 package account.model;
 
-public class Account {
+public abstract class Account {
   private int numero;
   private int agencia;
   private int tipo;
