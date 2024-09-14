@@ -3,18 +3,36 @@ package account;
 import java.util.Scanner;
 
 import account.model.Account;
+import account.model.CurrentAccount;
+import account.model.SavingsAccount;
 import account.util.Cores;
 
 public class Menu {
   public static void main(String[] args) {
 
+    //Teste conta
     Account c1 = new Account(1, 123, 1, "joe hippie", 100000);
-
     c1.visualizar();
     c1.sacar(50000);
     c1.visualizar();
     c1.depositar(50000);
     c1.visualizar();
+
+    //Teste conta poupança
+    SavingsAccount cp1 = new SavingsAccount(1, 123, 2, "john doe", 100, 10);
+    cp1.visualizar();
+    cp1.sacar(200);
+    cp1.visualizar();
+    cp1.depositar(500);
+    cp1.visualizar();
+
+    //Teste conta corrente
+    CurrentAccount cc1 = new CurrentAccount(1, 123, 1, "joao da silva", 10, 500);
+    cc1.visualizar();
+    cc1.sacar(50);
+    cc1.visualizar();
+    cc1.depositar(50);
+    cc1.visualizar();
 
     try (Scanner read = new Scanner(System.in)) {
 
