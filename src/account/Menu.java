@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import account.controller.AccountController;
 import account.model.CurrentAccount;
 import account.model.SavingsAccount;
 import account.util.Cores;
@@ -11,29 +12,18 @@ import account.util.Cores;
 public class Menu {
   public static void main(String[] args) {
 
-    //Teste conta poupança
-    SavingsAccount cp1 = new SavingsAccount(1, 123, 2, "john doe", 100, 10);
-    cp1.visualizar();
-    cp1.sacar(200);
-    cp1.visualizar();
-    cp1.depositar(500);
-    cp1.visualizar();
-
-    //Teste conta corrente
-    CurrentAccount cc1 = new CurrentAccount(1, 123, 1, "joao da silva", 10, 500);
-    cc1.visualizar();
-    cc1.sacar(50);
-    cc1.visualizar();
-    cc1.depositar(50);
-    cc1.visualizar();
+    AccountController accounts = new AccountController();
 
     try (Scanner read = new Scanner(System.in)) {
 
-      int option;
+      int option, number, agency, type, birthday;
+      String holder;
+      float balance, limit;
 
       while (true) {
         System.out
-            .println(Cores.TEXT_YELLOW_BRIGHT + Cores.ANSI_BLACK_BACKGROUND + "\n\n***************************************");
+            .println(
+                Cores.TEXT_YELLOW_BRIGHT + Cores.ANSI_BLACK_BACKGROUND + "\n\n***************************************");
         System.out.println("                                       ");
         System.out.println("        BANCO DO BRAZIL COM Z          ");
         System.out.println("                                       ");
@@ -58,7 +48,7 @@ public class Menu {
         } catch (InputMismatchException e) {
           System.out.println("\nDigite valores inteiros!");
           read.nextLine();
-          option=0;
+          option = 0;
         }
 
         if (option == 9) {
@@ -72,45 +62,120 @@ public class Menu {
           case 1:
             System.out.println(Cores.TEXT_WHITE_BOLD + "Criar Conta\n\n");
 
+            System.out.println("Digite o número da agência: ");
+            agency = read.nextInt();
+
+            System.out.println("Digite o nome do titular: ");
+            read.skip("\\R");
+            holder = read.nextLine();
+
+            do {
+              System.out.println("Digite o tipo da conta (1 - CC ou 2 - CP): ");
+              type = read.nextInt();
+            } while (type < 1 || type > 2);
+
+            System.out.println("Digite o saldo da Conta (R$): ");
+            balance = read.nextFloat();
+
+            switch (type) {
+              case 1:
+                System.out.println("Digite o limite de Crédito (R$): ");
+                limit = read.nextFloat();
+                accounts.register(new CurrentAccount(accounts.generateNumber(), agency, type, holder, balance, limit));
+                break;
+
+              case 2:
+                System.out.println("Digite o dia do aniversário da conta: ");
+                birthday = read.nextInt();
+                accounts
+                    .register(new SavingsAccount(accounts.generateNumber(), agency, type, holder, balance, birthday));
+                break;
+            }
             keyPress();
             break;
           case 2:
-            System.out.println(Cores.TEXT_WHITE_BOLD +"Listar todas as Contas\n\n");
-
+            System.out.println(Cores.TEXT_WHITE_BOLD + "Listar todas as Contas\n\n");
+            accounts.listAll();
             keyPress();
             break;
           case 3:
-            System.out.println(Cores.TEXT_WHITE_BOLD +"Consultar dados da Conta - por número\n\n");
+            System.out.println(Cores.TEXT_WHITE_BOLD + "Consultar dados da Conta - por número\n\n");
+
+            System.out.println("Digite o número da conta deseja consultar: ");
+            number = read.nextInt();
+
+            accounts.findByNumber(number);
 
             keyPress();
             break;
           case 4:
-            System.out.println(Cores.TEXT_WHITE_BOLD +"Atualizar dados da Conta\n\n");
+            System.out.println(Cores.TEXT_WHITE_BOLD + "Atualizar dados da Conta\n\n");
+
+            System.out.println("Digite o número da conta que deseja atualizar: ");
+            number = read.nextInt();
+
+            var findAccount = accounts.findInCollection(number);
+
+            if (findAccount != null) {
+              System.out.println("Digite o novo número da agência: ");
+              agency = read.nextInt();
+
+              System.out.println("Digite o novo nome do titular: ");
+              read.skip("\\R");
+              holder = read.nextLine();
+
+              do {
+                System.out.println("Digite o novo tipo da conta (1 - CC ou 2 - CP): ");
+                type = read.nextInt();
+              } while (type < 1 || type > 2);
+
+              System.out.println("Digite o novo saldo da Conta (R$): ");
+              balance = read.nextFloat();
+
+              switch (type) {
+                case 1:
+                  System.out.println("Digite o novo limite de Crédito (R$): ");
+                  limit = read.nextFloat();
+                  accounts.update(new CurrentAccount(number, agency, type, holder, balance, limit));
+                  break;
+
+                case 2:
+                  System.out.println("Digite o novo dia do aniversário da conta: ");
+                  birthday = read.nextInt();
+                  accounts.update(new SavingsAccount(number, agency, type, holder, balance, birthday));
+                  ;
+                  break;
+                default:
+                  System.out.println("Tipo de conta inválido!");
+                  break;
+              }
+            } else
+              System.out.println("A conta não foi encontrada!");
 
             keyPress();
             break;
           case 5:
-            System.out.println(Cores.TEXT_WHITE_BOLD +"Apagar a Conta\n\n");
+            System.out.println(Cores.TEXT_WHITE_BOLD + "Apagar a Conta\n\n");
 
             keyPress();
             break;
           case 6:
-            System.out.println(Cores.TEXT_WHITE_BOLD +"Saque\n\n");
+            System.out.println(Cores.TEXT_WHITE_BOLD + "Saque\n\n");
 
             keyPress();
             break;
           case 7:
-            System.out.println(Cores.TEXT_WHITE_BOLD +"Depósito\n\n");
+            System.out.println(Cores.TEXT_WHITE_BOLD + "Depósito\n\n");
 
             keyPress();
             break;
           case 8:
-            System.out.println(Cores.TEXT_WHITE_BOLD +"Tranferência entre Contas\n\n");
+            System.out.println(Cores.TEXT_WHITE_BOLD + "Tranferência entre Contas\n\n");
 
             keyPress();
             break;
           default:
-            System.out.println(Cores.TEXT_RED_BOLD +"\nOpção Inválida\n");
+            System.out.println(Cores.TEXT_RED_BOLD + "\nOpção Inválida\n");
 
             keyPress();
             break;
@@ -119,12 +184,12 @@ public class Menu {
     }
   }
 
-  public static void keyPress(){
+  public static void keyPress() {
     try {
-      System.out.println(Cores.TEXT_RESET+ "\n\nPressione Enter para continuar...");
+      System.out.println(Cores.TEXT_RESET + "\n\nPressione Enter para continuar...");
       System.in.read();
     } catch (IOException e) {
-        System.out.println("Você pressionou uma tecla diferente de enter!");
+      System.out.println("Você pressionou uma tecla diferente de enter!");
     }
   }
 
