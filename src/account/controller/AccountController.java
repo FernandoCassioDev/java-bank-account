@@ -47,8 +47,13 @@ public class AccountController implements AccountRepository {
 
   @Override
   public void delete(int number) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    var account = findInCollection(number);
+
+    if(account != null){
+      if(listAccounts.remove(account) == true)
+        System.out.println("\nA Conta número: "+ number + " foi apagada com sucesso!");
+    }else
+      System.out.println("\nA conta número: "+ number + " não foi encontrada");
   }
 
   @Override

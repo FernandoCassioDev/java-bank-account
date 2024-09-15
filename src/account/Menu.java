@@ -157,6 +157,11 @@ public class Menu {
           case 5:
             System.out.println(Cores.TEXT_WHITE_BOLD + "Apagar a Conta\n\n");
 
+            System.out.println("\nDigite o número da conta de deseja apagar: ");
+            number = read.nextInt();
+
+            accounts.delete(number);
+
             keyPress();
             break;
           case 6:
