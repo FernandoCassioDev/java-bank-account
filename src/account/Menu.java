@@ -16,9 +16,9 @@ public class Menu {
 
     try (Scanner read = new Scanner(System.in)) {
 
-      int option, number, agency, type, birthday;
+      int option, number, destinyNumber,agency, type, birthday;
       String holder;
-      float balance, limit;
+      float balance, limit, value;
 
       while (true) {
         System.out
@@ -167,15 +167,48 @@ public class Menu {
           case 6:
             System.out.println(Cores.TEXT_WHITE_BOLD + "Saque\n\n");
 
+            System.out.println("Digite o número da conta que deseja realizar o saque: ");
+            number = read.nextInt();
+
+            do {
+              System.out.println("Digite o valor do saque: ");
+              value = read.nextFloat();
+            } while (value <= 0);
+
+            accounts.withdraw(number, value);
+
             keyPress();
             break;
           case 7:
             System.out.println(Cores.TEXT_WHITE_BOLD + "Depósito\n\n");
 
+            System.out.println("Digite o número da conta em que deseja realizar o depósito: ");
+            number = read.nextInt();
+
+            do {
+              System.out.println("\nDigite o valor que deseja depositar: ");
+              value = read.nextFloat();
+            } while (value <= 0);
+
+            accounts.deposit(number, value);
+
             keyPress();
             break;
           case 8:
             System.out.println(Cores.TEXT_WHITE_BOLD + "Tranferência entre Contas\n\n");
+
+            System.out.println("\nDigite o numero da conta origem: ");
+            number = read.nextInt();
+
+            System.out.println("\nDigite o numero da conta destino: ");
+            destinyNumber = read.nextInt();
+
+            do {
+              System.out.println("\nDigite o valor da tranfêrencia: ");
+              value = read.nextFloat();
+            } while (value <= 0);
+
+            accounts.transfer(number, destinyNumber, value);
 
             keyPress();
             break;

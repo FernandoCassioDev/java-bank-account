@@ -49,29 +49,48 @@ public class AccountController implements AccountRepository {
   public void delete(int number) {
     var account = findInCollection(number);
 
-    if(account != null){
-      if(listAccounts.remove(account) == true)
-        System.out.println("\nA Conta número: "+ number + " foi apagada com sucesso!");
-    }else
-      System.out.println("\nA conta número: "+ number + " não foi encontrada");
+    if (account != null) {
+      if (listAccounts.remove(account) == true)
+        System.out.println("\nA Conta número: " + number + " foi apagada com sucesso!");
+    } else
+      System.out.println("\nA conta número: " + number + " não foi encontrada");
   }
 
   @Override
   public void withdraw(int number, float value) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'withdraw'");
+    var account = findInCollection(number);
+
+    if (account != null) {
+      if (account.sacar(value) == true) {
+        System.out.println("\nO saque na conta número: " + number + " foi realizado com sucesso!");
+      }
+    } else
+      System.out.println("\nA conta número: " + number + " não foi encontrada!");
   }
 
   @Override
   public void deposit(int number, float value) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'deposit'");
+    var account = findInCollection(number);
+
+    if (account != null) {
+      account.depositar(value);
+      System.out.println("\nO depósito na conta número: "+ number + " foi realizado com sucesso!");
+    }else
+      System.out.println("\nA conta número: "+ number+ " não foi encontrada!");
   }
 
   @Override
   public void transfer(int numberOrigin, int numberDestiny, float value) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'transfer'");
+    var originAccount = findInCollection(numberOrigin);
+    var destinyAccount = findInCollection(numberDestiny);
+
+    if(originAccount != null && destinyAccount != null){
+      if (originAccount.sacar(value) == true) {
+        destinyAccount.depositar(value);
+        System.out.println("\nA transfêrencia foi realizada com sucesso!");
+      }
+    }else
+      System.out.println("\nA conta de origem e/ou destino não foram encontradas!");
   }
 
   public int generateNumber() {
